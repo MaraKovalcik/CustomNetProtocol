@@ -16,6 +16,7 @@
 #include <assert.h>
 
 #define BUFSIZE 1024
+#define SERVER_FILE "/etc/passwd"
 
 //Globální proměnné
 int hostUsed = -1;
@@ -23,6 +24,7 @@ int portUsed = -1;
 bool nUsed    = false;
 bool fUsed    = false;
 bool lUsed    = false;
+char *prepinac = "n";
 char *host = NULL;
 char *login = NULL;
 int port = -1;
@@ -60,7 +62,28 @@ int main(int argc, char **argv){
     // tiskne informace o vzdalenem soketu
     printf("INFO: Server socket: %s : %d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
 
+    // 4. Vytvoření spojení se serverem
+    if (connect(client_socket, (const struct sockaddr *) &server_address, sizeof(server_address)) != 0){
+        fprintf(stderr, "ERROR: Nelze se pripojit k serveru %s\n", host);
+        exit(EXIT_FAILURE);
+    }
 
+    // 5. Odeslání socketu
+    strcat(buf, prepinac);
+    strcat(buf, login);
+    printf("Send to server: %s\n",buf);
+    bytestx = send(client_socket, buf, strlen(buf), 0);
+    if (bytestx < 0)
+        perror("ERROR: sendto");
+
+    // 6. Přijetí socketu
+    bytesrx = recv(client_socket, buf, BUFSIZE, 0);
+    if (bytesrx < 0)
+        perror("ERROR: recvfrom");
+
+    printf("Echo from server: %s\n", buf);
+
+    close(client_socket);
     printf("\nIPK-CLIENT: host=%s | port=%d | n=%d | f=%d | l=%d | login=%s\n", host, port, nUsed, fUsed, lUsed, login);
     return 0;
 }
@@ -86,14 +109,17 @@ bool parseArguments(int argc, char **argv){
             case 'n':
                 nUsed = true;
                 nORlORf++;
+                prepinac = "n";
                 break;
             case 'f':
                 fUsed = true;
                 nORlORf++;
+                prepinac = "f";
                 break;
             case 'l':
                 lUsed = true;
                 nORlORf++;
+                prepinac = "l";
                 break;
             default:
                 break;
