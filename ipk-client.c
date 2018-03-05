@@ -16,7 +16,6 @@
 #include <assert.h>
 
 #define BUFSIZE 1024
-#define SERVER_FILE "/etc/passwd"
 
 //Globální proměnné
 int hostUsed = -1;
@@ -124,8 +123,10 @@ bool parseArguments(int argc, char **argv){
             default:
                 break;
         }
-    // TODO - login je teď vždy poslední, upravit tak, aby mohl být kdekoliv v poli argumentů
-    login = argv[6];
+    if(argc == 6)
+        login = "";
+    else
+        login = argv[6];
     if (hostUsed == -1) {
         fprintf(stderr,"ERROR: Spatne zadane parametry. -h je povinny argument\n");
         exit(EXIT_FAILURE);

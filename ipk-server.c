@@ -25,6 +25,7 @@ struct sockaddr_in6 sa;
 struct sockaddr_in6 sa_client;
 char str[INET6_ADDRSTRLEN];
 int port_number;
+bool nUsed = false, lUsed = false, fUsed = false;
 
 // Deklarace funkcí
 bool parseArguments(int, char**);
@@ -32,7 +33,7 @@ char* parseData(char tmpbuff[BUFFER]);
 
 int main(int argc, char **argv) {
     parseArguments(argc, argv);
-    printf("Port: %d \t PortUsed: %d\n", port_number, portUsed);
+    //printf("Port: %d \t PortUsed: %d\n", port_number, portUsed);
 
     socklen_t sa_client_len=sizeof(sa_client);
     if ((welcome_socket = socket(PF_INET6, SOCK_STREAM, 0)) < 0)
@@ -71,6 +72,8 @@ int main(int argc, char **argv) {
             int res = 0;
             for (;;)
             {
+                memset(buff, 0, sizeof(buff));
+
                 res = recv(comm_socket, buff, BUFFER,0);
                 if (res <= 0)
                     break;
@@ -95,10 +98,26 @@ int main(int argc, char **argv) {
 /*
  * Funkce pro zpracování dat na serveru
  */
-char* parseData(char tmpbuff[BUFFER]){
+char* parseData(char buff[BUFFER]){
+    char login[BUFFER];
+    strcat(buff, "XXX");
+    nUsed = false; lUsed = false; fUsed = false;
+    if(buff[0] == 'n')   nUsed = true;
+    if(buff[0] == 'l')   lUsed = true;
+    if(buff[0] == 'f')   fUsed = true;
+    for(int i = 0; i<BUFFER; i++)
+        login[i] = buff[i+1];
 
-    strcat(tmpbuff, "XXXXXXXXXX");
-    return tmpbuff;
+    // TODO zpracování a rozparsování souboru /etc/passwd na serveru
+    if(nUsed){
+        printf("Bude se vypisovat plne jmeno uzivatele: %s\n", login);
+    }else if(fUsed){
+        printf("Budou se vypisovat informace o domovskem adresari uzivatele: %s\n", login);
+    }else if(lUsed){
+        printf("Budou se vypisovat login vsech uzivatelu hledanych s prefixem: %s\n", login);
+    }
+
+    return buff;
 }
 
 /*
