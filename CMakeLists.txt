@@ -3,5 +3,5 @@ project(projekt1)
 
 set(CMAKE_C_STANDARD 99)
 
-set(SOURCE_FILES ipk-client.c)
+set(SOURCE_FILES ipk-client.c parsePasswd.c)
 add_executable(projekt1 ${SOURCE_FILES})
