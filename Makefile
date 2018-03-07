@@ -10,7 +10,7 @@ CLIENT=ipk-client
 SERVER=ipk-server
 CLIENTFILES=ipk-client.c # případné další osubory
 SERVERFILES=ipk-server.c # případné další osubory
-CFLAGS=-std=gnu99 -Wall -Wextra -Werror -pedantic -pthread
+CFLAGS=-std=gnu99 -Wall -Werror -Wextra -pedantic -pthread
 CC=gcc
 RM=rm -f
 

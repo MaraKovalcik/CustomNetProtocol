@@ -1,0 +1,172 @@
+\documentclass[11pt]{article}
+\fontfamily{Times}
+
+\usepackage[left=2cm,right=2cm,text={17cm, 24cm},top=2.cm]{geometry}
+\usepackage[czech]{babel}
+\usepackage[utf8x]{inputenc}
+\usepackage{scrextend}
+\usepackage{lipsum}
+\usepackage{graphicx}
+\usepackage{amsthm}
+\usepackage{color}
+
+%\usepackage{titlesec}
+%\titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{10pt plus 2pt minus 2pt}
+%\titlespacing\subsection{20pt}{12pt plus 4pt minus 2pt}{10pt plus 2pt minus 2pt}
+%\titlespacing\subsubsection{40pt}{12pt plus 4pt minus 2pt}{10pt plus 2pt minus 2pt}
+
+\title{Počítačové komunikace a sítě\\[0.5 cm] Dokumentace k projektu 1}		
+\author{Marek Kovalčík}								
+\date{8. březen 2017}								
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\usepackage{tocloft}
+\usepackage{changepage}
+
+
+\renewcommand\cfttoctitlefont{\hfill\Large\bfseries}
+\renewcommand\cftaftertoctitle{\hfill\mbox{}}
+
+
+\setcounter{tocdepth}{2}
+
+\begin{document}
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\begin{titlepage}
+		\centering
+		\vspace*{0.5 cm}
+		\includegraphics[scale = 0.3]{logo.png}\\[2.0 cm]
+		\textsc{\LARGE Vysoké učení technické v Brně}\\[0.3 cm]
+		\textsc{\Large Fakulta informačních technologií}\\[2.0 cm]
+		\rule{\linewidth}{0.2 mm} \\[2.0 cm]
+		{ \huge \bfseries \thetitle}\\[2.0 cm]
+		\LARGE{Varianta 1: Klient-server pro získání informace o uživatelích}\\[0.5 cm]
+		\rule{\linewidth}{0.2 mm} \\[2.0 cm]
+		
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushleft} \large
+				\vspace{1 cm}
+				Marek Kovalčík
+			\end{flushleft}
+		\end{minipage}
+		\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+				%\emph{Login a ID:} 
+				\vspace{1 cm}
+				xkoval14, 196248 \hspace{1 cm}\\								
+			\end{flushright}
+		\end{minipage}\\[2 cm]
+		
+		{\large \thedate}\\[2 cm]
+		
+		\vfill
+		
+	\end{titlepage}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\tableofcontents
+	\clearpage
+	
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\section{Zadání}
+	\begin{flushleft}
+		Zadáním tohoto projektu bylo vytvořit aplikaci v jazyce C/C++ pro klienta a server s použitím BSD socketů pro přenos informací o uživateli/uživatelích ze serveru. \par		
+		
+		\begin{center}
+			Spuštění klienta: ./ipk-client -h host -p port [-n$\mid$-f$\mid$-l] login\\[0.5 cm]
+			\begin{itemize}
+				\item host (IP adresa nebo fully-qualified DNS name) identifikace serveru jakožto koncového bodu komunikace klienta;
+				port (číslo) cílové číslo portu;
+				\item -n značí, že bude vráceno plné jméno uživatele včetně případných dalších informací pro uvedený login (User ID Info);
+				\item -f značí, že bude vrácena informace o domácím adresáři uživatele pro uvedený login (Home directory);
+				\item -l značí, že bude vrácen seznam všech uživatelů, tento bude vypsán tak, že každé uživatelské jméno bude na zvláštním řádku; v tomto případě je login nepovinný. Je-li však uveden bude použit jako prefix pro výběr uživatelů.
+				\item login určuje přihlašovací jméno uživatele pro výše uvedené operace.
+			\end{itemize}
+		\end{center}
+		\begin{center}
+			Spuštění serveru: ./ipk-server -p port  \\[0.5 cm]
+			\begin{itemize}
+				\item port (číslo) číslo portu, na kterém server naslouchá na připojení od klientů.
+			\end{itemize}
+		\end{center}
+			
+	\end{flushleft}
+	
+	\section{Trocha teorie}
+	\begin{flushleft}
+		Síťový socket (anglicky network socket) je v informatice koncový bod připojení přes počítačovou síť. S rozvojem Internetu většina komunikace mezi počítači používá rodinu protokolů TCP/IP. Vlastní přenos zajišťuje IP protokol, a proto je používáno i označení internetový socket. Vlastní socket je handle (abstraktní odkaz), který může program použít při volání síťového rozhraní pro programování aplikací (API), například ve funkci „odeslat tato data na tento socket“. Sockety jsou vnitřně často jen celá čísla, která odkazují do tabulky aktivních spojení.\\[0.5 cm]
+		
+		Počítačové procesy, poskytující aplikační služby, jsou označovány jako servery a při startu vytvářejí sockety, které jsou ve stavu naslouchání (listen). Tyto sockety čekají na iniciativu od klientských programů.\\[0.5 cm]
+		
+		TCP server může obsluhovat více klientů současně pomocí podřízeného procesu vytvořeného pro každého klienta a navázání TCP spojení mezi podřízeným procesem a klientem. Pro každé spojení jsou vytvořeny unikátní specializované sockety. Když je zaváděno socket-to-socket virtuální spojení nebo virtuální okruh (VC), také známo jako TCP relace, pomocí dálkového socketu, což poskytuje duplexní proud bytů, jsou tyto unikátní specializované sockety ve stavu spojeno (connected).\\[0.5 cm]
+		Počítačové procesy, poskytující aplikační služby, jsou označovány 			
+	\end{flushleft}
+	
+	\newpage
+	\section{Popis řešení}
+		\subsection{Klient}
+			\begin{flushleft}
+				safsafafs \par			
+			\end{flushleft}
+			
+		\subsection{Server}
+			\begin{flushleft}
+				safsafafs \par			
+			\end{flushleft}	
+
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\section{Implementace}	
+		\subsection{Klient}
+			\begin{flushleft}
+				safsafafs \par			
+			\end{flushleft}
+	
+		\subsection{Server}
+			\begin{flushleft}
+				safsafafs \par			
+			\end{flushleft}	
+	\section{Závěr}
+		
+			\begin{adjustwidth}{1cm}{0cm}
+				\subsection{Zhodnocení}
+				\begin{flushleft}
+				...\par
+				\end{flushleft}
+			\end{adjustwidth}						
+	\vfill
+	
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	\newpage
+	\section{Přílohy}
+	%\begin{adjustwidth}{1cm}{0cm}
+		\subsection{sdfsa}
+	%\end{adjustwidth}	
+	\begin{center}
+		\includegraphics[scale = 0.45]{logo.png}\\
+	\end{center}
+	\vfill
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	
+	\section{Použité zdroje}
+	\begin{flushleft}
+		Demonstrační soubory, Demo\_C.zip [online]. upraveno: 2018-02-22 [cit. 2018-03-07]. Dostupné z: https://wis.fit.vutbr.cz/FIT/st/course-files-st.php?file=\%2Fcourse\%2FIPK-IT\%2Fother\&cid=11963\par	
+	\end{flushleft}	
+	\begin{flushleft}
+		Počítačové komunikace a sítě, PDF prezentace [online]. [cit. 2018-03-07]. Dostupné z: https://wis.fit.vutbr.cz/FIT/st/course-files-st.php?file=\%2Fcourse\%2FIPK-IT\%2Flectures\%2FIPK2017L-02-APLIKACE.pdf\&cid=11963\par	
+	\end{flushleft}
+	\begin{flushleft}
+		Síťový socket, WIKIPEDIA, [online], upraveno: 14.1.2017 [cit 2018-03-07]. Dostupné z: https://cs.wikipedia.org/wiki/S%C3%AD%C5%A5ov%C3%BD_socket\par	
+	\end{flushleft}
+
+\end{document}

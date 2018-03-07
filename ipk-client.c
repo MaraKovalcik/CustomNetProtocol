@@ -1,9 +1,9 @@
 /**
  * @author Marek Kovalčík, xkoval14@stud.fit.vutbr.cz
  */
-
-#include <ctype.h>
+#define _GNU_SOURCE
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -127,7 +127,7 @@ bool parseArguments(int argc, char **argv){
         exit(EXIT_FAILURE);
     }
     int c;
-    while ((c = getopt (argc, argv, ":h:p:nfl")) != -1)
+    while ((c = getopt (argc, argv, ":h:p:n:f:l")) != -1)
         switch (c){
             case 'h': hostUsed = (int)atol(optarg);
                 host = optarg;
@@ -153,6 +153,9 @@ bool parseArguments(int argc, char **argv){
                 nORlORf++;
                 prepinac = "l";
                 break;
+            case '?':
+                fprintf(stderr, "ERROR: Neplatny prepinac\n");
+                exit(EXIT_FAILURE);
             default:
                 break;
         }
@@ -169,7 +172,7 @@ bool parseArguments(int argc, char **argv){
         exit(EXIT_FAILURE);
     }
     if(nORlORf != 1){
-        fprintf(stderr, "ERROR: Spatne zadane parametry. Prave jeden z [-n|-f|-l] musi byt aktivni.\n");
+        fprintf(stderr, "ERROR: Spatne zadane parametry. Prave jeden z [  -n LOGIN|-f LOGIN|-l [PREFIX]  ] musi byt aktivni.\n\t-n, -f ma povinny parametr LOGIN\n");
         exit(EXIT_FAILURE);
     }
     return true;
