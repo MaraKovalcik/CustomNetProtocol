@@ -12,9 +12,12 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <ctype.h>
+#include <time.h>
 
 #define BUFFER 1024
 #define SERVER_FILE "/etc/passwd"
+#define TEST_FILE "test"
+//#define TEST_FILE "test2"
 
 //Globální proměnné
 int portUsed = -1;
@@ -27,9 +30,24 @@ char str[INET6_ADDRSTRLEN];
 int port_number;
 bool nUsed = false, lUsed = false, fUsed = false;
 
+/*FILE *pFile;
+const size_t line_size = 300;
+//char* line_of_file = malloc(line_size);
+char *line = NULL;
+size_t len = 0;
+ssize_t read_line;
+char * pch;
+int position = 0;*/
+
+char tmpBuffer[BUFFER];
+
 // Deklarace funkcí
 bool parseArguments(int, char**);
-char* parseData(char tmpbuff[BUFFER]);
+char* parseData(char tmpbuff[BUFFER], int);
+
+void userInformation(char *login);
+char* userHomeDirectory(char *login);
+char* listOfUsers(char *prefix);
 
 int main(int argc, char **argv) {
     parseArguments(argc, argv);
@@ -80,11 +98,14 @@ int main(int argc, char **argv) {
                 printf("Received from client: %s\n", buff);
 
                 // TODO ... parse and send data to client
-                char *tmpRetezec = parseData(buff);
-                strcpy(buff, tmpRetezec);
+                char *tmpRetezec = NULL;
+                tmpRetezec = parseData(buff, comm_socket);
 
-                send(comm_socket, buff, strlen(buff), 0);
-                printf("Send to client: %s\n", buff);
+                strcpy(buff, tmpRetezec);
+                if(lUsed == false) {
+                    send(comm_socket, buff, strlen(buff), 0);
+                    printf("Send to client: %s\n", buff);
+                }
             }
         }
         else
@@ -98,9 +119,16 @@ int main(int argc, char **argv) {
 /*
  * Funkce pro zpracování dat na serveru
  */
-char* parseData(char buff[BUFFER]){
+char* parseData(char buff[BUFFER], int comm_socket){
+    FILE *pFile;
+    char *line = NULL;
+    size_t len = 0;
+    ssize_t read_line;
+    char * pch;
+    int position = 0;
+
     char login[BUFFER];
-    strcat(buff, "XXX");
+    int count = 0;
     nUsed = false; lUsed = false; fUsed = false;
     if(buff[0] == 'n')   nUsed = true;
     if(buff[0] == 'l')   lUsed = true;
@@ -108,14 +136,91 @@ char* parseData(char buff[BUFFER]){
     for(int i = 0; i<BUFFER; i++)
         login[i] = buff[i+1];
 
-    // TODO zpracování a rozparsování souboru /etc/passwd na serveru
+    strcpy(buff, "");
+
+    if((pFile = fopen(TEST_FILE, "r")) == NULL){
+        fprintf(stderr, "Soubor %s se nepodarilo otevrit\n", SERVER_FILE);
+        exit(1);
+    }
+
+    // Vypisování informací o uživateli
     if(nUsed){
         printf("Bude se vypisovat plne jmeno uzivatele: %s\n", login);
+        while ((read_line = getline(&line, &len, pFile)) != -1) {
+            pch = strtok (line,":");
+            if(strcmp(login, pch) == 0) {
+                while (pch != NULL) {
+                    position++;
+                    if (position == 5) {
+                        count++;
+                        strcat(buff, pch);
+                        strcat(buff, "\n");
+                    }
+                    pch = strtok(NULL, ":");
+                }
+                position = 0;
+            }
+        }
+    // Vypisování domovského adresáře uživatele
     }else if(fUsed){
         printf("Budou se vypisovat informace o domovskem adresari uzivatele: %s\n", login);
+        while ((read_line = getline(&line, &len, pFile)) != -1) {
+            pch = strtok (line,":");
+            if(strcmp(login, pch) == 0) {
+                while (pch != NULL) {
+                    position++;
+                    if (position == 6) {
+                        count ++;
+                        strcat(buff, pch);
+                        strcat(buff, "\n");
+                    }
+                    pch = strtok(NULL, ":");
+                }
+                position = 0;
+            }
+        }
+    // Vypisování listu uživatelů s možným prefixem
     }else if(lUsed){
+        int res = 0;
         printf("Budou se vypisovat login vsech uzivatelu hledanych s prefixem: %s\n", login);
+        while ((read_line = getline(&line, &len, pFile)) != -1) {
+            pch = strtok (line,":");
+            memset(buff, 0, BUFFER);
+           // strcpy(buff, "\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0");
+            if(strncmp (pch, login, strlen(login)) == 0){
+                count++;
+                // TODO smazat buff
+                //memset(buff, 0, BUFFER);
+                //strcpy(buff, pch);
+                strcpy(buff, pch);
+                //strcat(buff, "\n");
+                // odeslání jednoho loginu na klienta
+                send(comm_socket, buff, strlen(buff), 0);
+                printf("Send to client: %s", buff);
+                // přijetí potvrzující zprávy z klienta
+                res = recv(comm_socket, buff, BUFFER,0);
+                if (res <= 0) {
+                    printf("\tNeprisla odpoved od klienta, odesilani se ukoncuje\n");
+                    break;
+                }
+                else
+                    printf("\tKlientovi socket dobre dosel\n");
+            }
+        }
+        // Odeslání socketu o ukončení spojení
+        strcpy(buff, "end_connection\n");
+        send(comm_socket, buff, strlen(buff), 0);
+        printf("Send to client: %s", buff);
     }
+
+    if(count == 0) {
+        strcpy(buff, "INFO: Nic nebylo nalezeno pro '");
+        strcat(buff, login);
+        strcat(buff, "'\n");
+    }
+
+    fclose(pFile);
+    if (line) free(line);
 
     return buff;
 }

@@ -18,7 +18,7 @@
 #define TEST_FILE "test"
 
 FILE *pFile;
-char * line = NULL;
+char *line = NULL;
 size_t len = 0;
 ssize_t read_line;
 char * pch;
@@ -35,9 +35,9 @@ int main(){
         exit(1);
     }
 
-    userInformation("xkoval14");
+    //userInformation("xkoval14");
     //userHomeDirectory("xkoval14");
-    //listOfUsers("xkov");
+    listOfUsers("xkov");
 
     fclose(pFile);
     if (line) free(line);

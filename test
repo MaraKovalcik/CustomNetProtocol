@@ -1,0 +1,23 @@
+adm:x:3:4:adm:/var/adm:
+annot01:x:950:501:Speecon user 1:/nonexistent:/bin/ksh
+annot02:x:951:501:Speecon user 2:/nonexistent:/bin/ksh
+annot03:x:952:501:Speecon user 3:/nonexistent:/bin/ksh
+burgetova:x:914:201:Burgetova Ivana,UIFS,541141317:/homes/kazi/burgetova:/bin/ksh
+burgetr:x:292:201:Burget Radek,UIFS,541141320:/homes/kazi/burgetr:/bin/ksh
+buriankova:x:30003:201:Buriankova Iveta,VCIT,541141471:/homes/kazi/buriankova:/bin/ksh
+xkotra03:x:31935:251:Kotras Jan,FIT BIT 1r:/homes/eva/xk/xkotra03:/bin/ksh
+xkotyz04:x:9714:251:Kotyz Jan,FIT MIN 3r:/homes/eva/xk/xkotyz04:/bin/ksh
+xkoude19:x:23053:251:Koudelka Jiri,FIT MIS 3r:/homes/eva/xk/xkoude19:/bin/ksh
+xkoude26:x:31518:251:Koudelka Jakub,FIT BIT 1r:/homes/eva/xk/xkoude26:/bin/ksh
+xkoune01:x:30677:251:Kounelakis Iakovos,FIT:/homes/eva/xk/xkoune01:/bin/ksh
+xkoupy00:x:28446:251:Koupy Pavel,FIT BIT 3r:/homes/eva/xk/xkoupy00:/bin/ksh
+xkoute04:x:24474:251:Koutensky Michal,FIT MSK 2r:/homes/eva/xk/xkoute04:/bin/ksh
+xkoutn21:x:24476:251:Koutny Vit,FIT MPV 1r:/homes/eva/xk/xkoutn21:/bin/ksh
+xkoval12:x:26407:251:Kovalan Patrik,FIT BIT 4r:/homes/eva/xk/xkoval12:/bin/ksh
+xkoval14:x:29769:251:Kovalcik Marek,FIT BIT 2r:/homes/eva/xk/xkoval14:/bin/ksh
+xkovar66:x:23056:251:Kovarik David,FIT MIN 3r:/homes/eva/xk/xkovar66:/bin/ksh
+xkovar67:x:23057:251:Kovarik Tomas,FIT MIS 3r:/homes/eva/xk/xkovar67:/bin/ksh
+xkovar69:x:24480:251:Kovar Tadeas,FIT:/homes/eva/xk/xkovar69:/bin/ksh
+xkovar77:x:28150:251:Kovarik Viktor,FIT BIT 3r:/homes/eva/xk/xkovar77:/bin/ksh
+xkovar80:x:29240:251:Kovarova Lenka,FIT BIT 1r:/homes/eva/xk/xkovar80:/bin/ksh
+xkovar82:x:31520:251:Kovar Petr,FIT BIT 1r:/homes/eva/xk/xkovar82:/bin/ksh

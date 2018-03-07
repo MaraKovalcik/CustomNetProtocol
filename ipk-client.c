@@ -15,7 +15,7 @@
 #include <stdbool.h>
 #include <assert.h>
 
-#define BUFSIZE 1024
+#define BUFFER 1024
 
 //Globální proměnné
 int hostUsed = -1;
@@ -29,11 +29,12 @@ char *login = NULL;
 int port = -1;
 int nORlORf = 0;
 
+int count = 0;
 int bytestx, bytesrx;
 socklen_t serverlen;
 struct hostent *server;
 struct sockaddr_in server_address;
-char buf[BUFSIZE];
+char buf[BUFFER];
 
 // Deklarace funkcí
 bool parseArguments(int, char**);
@@ -44,10 +45,7 @@ int main(int argc, char **argv){
 
     // 1. Vytvoření socketu
     int client_socket;
-    if ((client_socket = socket(AF_INET, SOCK_STREAM, 0)) <= 0){
-        perror("ERROR: socket");
-        exit(EXIT_FAILURE);
-    }
+
     // 2. ziskani adresy serveru pomoci DNS
     if ((server = gethostbyname(host)) == NULL) {
         fprintf(stderr,"ERROR: Neexistujici host %s\n", host);
@@ -59,7 +57,13 @@ int main(int argc, char **argv){
     bcopy((char *)server->h_addr, (char *)&server_address.sin_addr.s_addr, server->h_length);
     server_address.sin_port = htons(port);
     // tiskne informace o vzdalenem soketu
-    printf("INFO: Server socket: %s : %d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
+    //printf("INFO: Server socket: %s : %d \n", inet_ntoa(server_address.sin_addr), ntohs(server_address.sin_port));
+
+    // Vytvoření socketu
+    if ((client_socket = socket(AF_INET, SOCK_STREAM, 0)) <= 0){
+        perror("ERROR: socket");
+        exit(EXIT_FAILURE);
+    }
 
     // 4. Vytvoření spojení se serverem
     if (connect(client_socket, (const struct sockaddr *) &server_address, sizeof(server_address)) != 0){
@@ -70,20 +74,49 @@ int main(int argc, char **argv){
     // 5. Odeslání socketu
     strcat(buf, prepinac);
     strcat(buf, login);
-    printf("Send to server: %s\n",buf);
+    //printf("Send to server: %s\n",buf);
     bytestx = send(client_socket, buf, strlen(buf), 0);
     if (bytestx < 0)
         perror("ERROR: sendto");
 
-    // 6. Přijetí socketu
-    bytesrx = recv(client_socket, buf, BUFSIZE, 0);
-    if (bytesrx < 0)
-        perror("ERROR: recvfrom");
+    // přijímání socketu pro -n, -f
+    if(lUsed == false) {
+        // 6. Přijetí socketu
+        bytesrx = recv(client_socket, buf, BUFFER, 0);
+        if (bytesrx < 0)
+            perror("ERROR: recvfrom");
+        //printf("Echo from server: %s", buf);
+        printf("%s", buf);
+    // Přijímání socketu a odeslání odpovědi o doručení
+    }else{
+        // TODO potvrzování ve whilu
+        while(1) {
+            memset(buf, 0, BUFFER);
+            bytesrx = recv(client_socket, buf, BUFFER, 0);
+            if (bytesrx < 0) {
+                perror("ERROR: recvfrom");
+                break;
+            }
+            if(strcmp(buf, "end_connection\n") == 0)
+                break;
 
-    printf("Echo from server: %s\n", buf);
+            count++;
+            //printf("Echo from server: %s", buf);
+            printf("%s\n", buf);
+            //memset(buf, 0, BUFFER);
+            // TODO send to server
+            bytestx = send(client_socket, "OK", strlen(buf), 0);
+            if (bytestx < 0){
+                perror("ERROR: odeslani potvrzovaciho socketu");
+                break;
+            }
+        }
+        if(count==0)
+            fprintf(stderr, "INFO: pro prefix '%s' nebylo nic nalezeno\n", login);
+    }
 
     close(client_socket);
-    printf("\nIPK-CLIENT: host=%s | port=%d | n=%d | f=%d | l=%d | login=%s\n", host, port, nUsed, fUsed, lUsed, login);
+    //printf("\nIPK-CLIENT: host=%s | port=%d | n=%d | f=%d | l=%d | login=%s\n", host, port, nUsed, fUsed, lUsed, login);
     return 0;
 }
 
