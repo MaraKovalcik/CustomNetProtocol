@@ -24,8 +24,8 @@ int portUsed = -1;
 int port_number = -1;
 int rc;
 int welcome_socket;
-struct sockaddr_in6 sa;
-struct sockaddr_in6 sa_client;
+struct sockaddr_in sa;
+struct sockaddr_in sa_client;
 char str[INET6_ADDRSTRLEN];
 int port_number;
 bool nUsed = false, lUsed = false, fUsed = false;
@@ -45,16 +45,16 @@ int main(int argc, char **argv) {
 
     // Vytvoření welcome socketu
     socklen_t sa_client_len=sizeof(sa_client);
-    if ((welcome_socket = socket(PF_INET6, SOCK_STREAM, 0)) < 0)
+    if ((welcome_socket = socket(PF_INET, SOCK_STREAM, 0)) < 0)
     {
         perror("ERROR: socket");
         exit(EXIT_FAILURE);
     }
 
     memset(&sa,0,sizeof(sa));
-    sa.sin6_family = AF_INET6;
-    sa.sin6_addr = in6addr_any;
-    sa.sin6_port = htons(port_number);
+    sa.sin_family = AF_INET;
+    //sa.sin_addr = INADDR_ANY;
+    sa.sin_port = htons(port_number);
 
     if ((rc = bind(welcome_socket, (struct sockaddr*)&sa, sizeof(sa))) < 0)
     {
@@ -78,10 +78,10 @@ int main(int argc, char **argv) {
         }
         if (pid == 0) {
             if (comm_socket > 0) {
-                if (inet_ntop(AF_INET6, &sa_client.sin6_addr, str, sizeof(str))) {
+                if (inet_ntop(AF_INET, &sa_client.sin_addr, str, sizeof(str))) {
                     printf("INFO: New connection:\n");
                     printf("INFO: Client address is %s\n", str);
-                    printf("INFO: Client port is %d\n", ntohs(sa_client.sin6_port));
+                    printf("INFO: Client port is %d\n", ntohs(sa_client.sin_port));
                 }
 
                 char buff[BUFFER];
@@ -193,15 +193,15 @@ char* parseData(char buff[BUFFER], int comm_socket){
                 strcpy(buff, pch);
                 // odeslání jednoho loginu na klienta
                 send(comm_socket, buff, strlen(buff), 0);
-                printf("Send to client: %s", buff);
+                //printf("Send to client: %s", buff);
                 // přijetí potvrzující zprávy z klienta
                 res = recv(comm_socket, buff, BUFFER,0);
                 if (res <= 0) {
                     printf("\tNeprisla odpoved od klienta, odesilani se ukoncuje\n");
                     break;
                 }
-                else
-                    printf("\tKlientovi socket dobre dosel\n");
+                //else
+                  //  printf("\tKlientovi socket dobre dosel\n");
             }
         }
         // Odeslání socketu o ukončení spojení
@@ -237,9 +237,13 @@ bool parseArguments(int argc, char **argv){
     while ((c = getopt (argc, argv, "p:")) != -1)
         switch (c){
             case 'p': portUsed = (int)atol(optarg);
-                if ((port_number = atoi(optarg)) < 0) {
-                        fprintf(stderr, "ERROR: Spatne zadane parametry. PORT musi byt kladne cislo\n");
+                //if ((port_number = atoi(optarg)) <= 0) {
+                if ((port_number = strtod(optarg, NULL)) <= 0) {
+                        fprintf(stderr, "ERROR: Spatne zadane parametry. PORT musi byt kladne cislo > 0 a < 65536\n");
                         exit(EXIT_FAILURE);
+                }else if(port_number > 65535){
+                    fprintf(stderr, "ERROR: Spatne zadane parametry. PORT musi byt kladne cislo > 0 a < 65536\n");
+                    exit(EXIT_FAILURE);
                 }else
                     break;
             case '?':

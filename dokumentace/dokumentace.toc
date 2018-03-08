@@ -1,14 +1,14 @@
 \select@language {czech}
 \contentsline {section}{\numberline {1}Zad\IeC {\'a}n\IeC {\'\i }}{2}
 \contentsline {section}{\numberline {2}Trocha teorie}{2}
-\contentsline {section}{\numberline {3}Popis \IeC {\v r}e\IeC {\v s}en\IeC {\'\i }}{3}
-\contentsline {subsection}{\numberline {3.1}Klient}{3}
-\contentsline {subsection}{\numberline {3.2}Server}{3}
-\contentsline {section}{\numberline {4}Implementace}{3}
-\contentsline {subsection}{\numberline {4.1}Klient}{3}
-\contentsline {subsection}{\numberline {4.2}Server}{3}
-\contentsline {section}{\numberline {5}Z\IeC {\'a}v\IeC {\v e}r}{3}
-\contentsline {subsection}{\numberline {5.1}Zhodnocen\IeC {\'\i }}{3}
-\contentsline {section}{\numberline {6}P\IeC {\v r}\IeC {\'\i }lohy}{4}
-\contentsline {subsection}{\numberline {6.1}sdfsa}{4}
-\contentsline {section}{\numberline {7}Pou\IeC {\v z}it\IeC {\'e} zdroje}{4}
+\contentsline {section}{\numberline {3}Popis \IeC {\v r}e\IeC {\v s}en\IeC {\'\i } aplika\IeC {\v c}n\IeC {\'\i }ho protokolu}{3}
+\contentsline {subsection}{\numberline {3.1}Implemetace klientsk\IeC {\'e} aplikace}{3}
+\contentsline {subsection}{\numberline {3.2}Implementace serverov\IeC {\'e} aplikace}{3}
+\contentsline {section}{\numberline {4}Z\IeC {\'a}v\IeC {\v e}r}{3}
+\contentsline {subsection}{\numberline {4.1}Zhodnocen\IeC {\'\i }}{3}
+\contentsline {section}{\numberline {5}P\IeC {\v r}\IeC {\'\i }lohy}{4}
+\contentsline {subsection}{\numberline {5.1}./ipk-server -p 5000 be\IeC {\v z}\IeC {\'\i } na serveru merlin.fit.vutbr.cz}{4}
+\contentsline {subsection}{\numberline {5.2}./ipk-client -h merlin.fit.vutbr.cz -p 5000 -n xkoval14}{4}
+\contentsline {subsection}{\numberline {5.3}./ipk-client -h merlin.fit.vutbr.cz -p 5000 -f rysavy}{4}
+\contentsline {subsection}{\numberline {5.4}./ipk-client -h merlin.fit.vutbr.cz -p 5000 -l a}{4}
+\contentsline {section}{\numberline {6}Pou\IeC {\v z}it\IeC {\'e} zdroje}{5}

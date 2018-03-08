@@ -107,66 +107,78 @@
 		
 		Počítačové procesy, poskytující aplikační služby, jsou označovány jako servery a při startu vytvářejí sockety, které jsou ve stavu naslouchání (listen). Tyto sockety čekají na iniciativu od klientských programů.\\[0.5 cm]
 		
-		TCP server může obsluhovat více klientů současně pomocí podřízeného procesu vytvořeného pro každého klienta a navázání TCP spojení mezi podřízeným procesem a klientem. Pro každé spojení jsou vytvořeny unikátní specializované sockety. Když je zaváděno socket-to-socket virtuální spojení nebo virtuální okruh (VC), také známo jako TCP relace, pomocí dálkového socketu, což poskytuje duplexní proud bytů, jsou tyto unikátní specializované sockety ve stavu spojeno (connected).\\[0.5 cm]
-		Počítačové procesy, poskytující aplikační služby, jsou označovány 			
+		TCP server může obsluhovat více klientů současně pomocí podřízeného procesu vytvořeného pro každého klienta a navázání TCP spojení mezi podřízeným procesem a klientem. Pro každé spojení jsou vytvořeny unikátní specializované sockety. Když je zaváděno socket-to-socket virtuální spojení nebo virtuální okruh (VC), také známo jako TCP relace, pomocí dálkového socketu, což poskytuje duplexní proud bytů, jsou tyto unikátní specializované sockety ve stavu spojeno (connected).[3]\\[0.5 cm] 			
 	\end{flushleft}
 	
 	\newpage
-	\section{Popis řešení}
-		\subsection{Klient}
+	\section{Popis řešení aplikačního protokolu}
+		\subsection{Implemetace klientské aplikace}
 			\begin{flushleft}
-				safsafafs \par			
+				Pro spuštění klienta je nutné zadat správně argumenty, v opačném případě se klient nespustí.	Před začátkem komunikace musí být server již spuštěný. Komunikace vždy začíná klient odesláním welcome socketu na server.\\[0.5 cm] 
+				Jakmile je spojení navázáno, odešle klient zprávu, ve které první písmeno označuje požadovanou operaci a zbytek zprávy označuje hledaný login či prefix. V případě přepínače -l se loginy přijímají po jednom s tím, že klient vždy pošle zprávu zpět serveru o úspěšném přijetí aby server mohl pokračovat v posílání. Jakmile server odešle poslední login a příjde mu potvrzující zpráva, odešle zprávu end-communication , klient ji obdrží a komunikace se uzavře.\par		
 			\end{flushleft}
 			
-		\subsection{Server}
+		\subsection{Implementace serverové aplikace}
 			\begin{flushleft}
-				safsafafs \par			
+				Serverová aplikace musí být spuštěná před tím, než se na ni klient/i začnou připojovat. Pro spuštění je třeba zadat přepínač -p a číslo portu. Budou-li argumenty zadány nesprávně, server se nespustí.\\[0.5 cm]
+				Po spuštění server čeká v nekonečné smyčce na požadavky klientů a v jeden moment je schopen obsluhovat více klientů, tzn., že je konkurentní. Konkurence schopnost je zabezpečená pomocí procesů.\\[0.5 cm]
+				Server obdrží od klienta takovou zprávu, že první písmeno určuje funkci, která se má provést a zbytek zprávy určuje hledaný login nebo prefix. $($např. nxkoval14 nebo frysavy nebo l $($v případě žádného prefixu$))$\\[0.5 cm]
+				V případě nenalezení shody v souboru /etc/passwd na serveru se vrátí informační zpráva o nenalezení.\\[0.5 cm]
+				V případě, že klient žádá o list uživatelů s určitým prefixem, každý login je posílán samostatně a server zpátky od klienta obdrží zprávu o úspěšném přijetí aby mohl pokračovat.\par
+							
 			\end{flushleft}	
 
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	
-	\section{Implementace}	
-		\subsection{Klient}
-			\begin{flushleft}
-				safsafafs \par			
-			\end{flushleft}
-	
-		\subsection{Server}
-			\begin{flushleft}
-				safsafafs \par			
-			\end{flushleft}	
+		
 	\section{Závěr}
 		
 			\begin{adjustwidth}{1cm}{0cm}
 				\subsection{Zhodnocení}
 				\begin{flushleft}
-				...\par
+				Tento aplikační protokol je funkční, splňuje body v zadání a odchytává spoustu neočekávaných stavů a vypořádá se s nimi. Až na nějaké drobné problémy jsem se svým řešením spokojen.\par
 				\end{flushleft}
 			\end{adjustwidth}						
 	\vfill
 	
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-	\newpage
+	\newpage		
 	\section{Přílohy}
-	%\begin{adjustwidth}{1cm}{0cm}
-		\subsection{sdfsa}
-	%\end{adjustwidth}	
+			Klienta i server jsem testoval v mnoha varintách. Spuštění serverové i klientské aplikace na domácím počítači, spuštění serveru na vzdáleném serveru a klienta na domácím počítači nebo spuštění obou aplikací na vzdáleném serveru. Výstupy fungovaly tak jak měly, avšak pro přehlednost a stručnost dokumentace zde uvádím jen pár demonstračních příkladů.
+		\subsection{./ipk-server -p 5000 beží na serveru merlin.fit.vutbr.cz}
 	\begin{center}
-		\includegraphics[scale = 0.45]{logo.png}\\
+		\includegraphics[scale = 0.8]{priloha1.png}\\
 	\end{center}
+
+	\subsection{./ipk-client -h merlin.fit.vutbr.cz -p 5000 -n xkoval14}
+	\begin{center}
+		\includegraphics[scale = 0.83]{priloha2.png}\\
+	\end{center}
+	
+	\subsection{./ipk-client -h merlin.fit.vutbr.cz -p 5000 -f rysavy}
+	\begin{center}
+		\includegraphics[scale = 0.83]{priloha3.png}\\
+	\end{center}
+	
+	\subsection{./ipk-client -h merlin.fit.vutbr.cz -p 5000 -l a}
+	\begin{center}
+		\includegraphics[scale = 0.83]{priloha4.png}\\
+	\end{center}
+	
+
+	
 	\vfill
 	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 	
 	\section{Použité zdroje}
 	\begin{flushleft}
-		Demonstrační soubory, Demo\_C.zip [online]. upraveno: 2018-02-22 [cit. 2018-03-07]. Dostupné z: https://wis.fit.vutbr.cz/FIT/st/course-files-st.php?file=\%2Fcourse\%2FIPK-IT\%2Fother\&cid=11963\par	
+		[1] Demonstrační soubory, Demo\_C.zip [online]. upraveno: 2018-02-22 [cit. 2018-03-07]. Dostupné z: https://wis.fit.vutbr.cz/FIT/st/course-files-st.php?file=\%2Fcourse\%2FIPK-IT\%2Fother\&cid=11963\par	
 	\end{flushleft}	
 	\begin{flushleft}
-		Počítačové komunikace a sítě, PDF prezentace [online]. [cit. 2018-03-07]. Dostupné z: https://wis.fit.vutbr.cz/FIT/st/course-files-st.php?file=\%2Fcourse\%2FIPK-IT\%2Flectures\%2FIPK2017L-02-APLIKACE.pdf\&cid=11963\par	
+		[2] Počítačové komunikace a sítě, PDF prezentace [online]. [cit. 2018-03-07]. Dostupné z: https://wis.fit.vutbr.cz/FIT/st/course-files-st.php?file=\%2Fcourse\%2FIPK-IT\%2Flectures\%2FIPK2017L-02-APLIKACE.pdf\&cid=11963\par	
 	\end{flushleft}
 	\begin{flushleft}
-		Síťový socket, WIKIPEDIA, [online], upraveno: 14.1.2017 [cit 2018-03-07]. Dostupné z: https://cs.wikipedia.org/wiki/S%C3%AD%C5%A5ov%C3%BD_socket\par	
+		[3] Síťový socket, WIKIPEDIA, [online], upraveno: 14.1.2017 [cit 2018-03-07]. Dostupné z: https://cs.wikipedia.org/wiki/S%C3%AD%C5%A5ov%C3%BD_socket\par	
 	\end{flushleft}
 
 \end{document}

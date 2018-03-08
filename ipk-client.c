@@ -28,6 +28,7 @@ char *host = NULL;
 char *login = NULL;
 int port = -1;
 int nORlORf = 0;
+int pocetPokusu = 5;
 
 int count = 0;
 int bytestx, bytesrx;
@@ -66,6 +67,7 @@ int main(int argc, char **argv){
     }
 
     // 4. Vytvoření spojení se serverem
+    // TODO ... nelze se připojit na evu
     if (connect(client_socket, (const struct sockaddr *) &server_address, sizeof(server_address)) != 0){
         fprintf(stderr, "ERROR: Nelze se pripojit k serveru %s\n", host);
         exit(EXIT_FAILURE);
@@ -82,10 +84,13 @@ int main(int argc, char **argv){
     // přijímání socketu pro -n, -f
     if(lUsed == false) {
         // 6. Přijetí socketu
-        bytesrx = recv(client_socket, buf, BUFFER, 0);
+        //while(pocetPokusu > 0) {
+            bytesrx = recv(client_socket, buf, BUFFER, 0);
+            //if ()
+            //pocetPokusu--;
+        //}
         if (bytesrx < 0)
             perror("ERROR: recvfrom");
-        //printf("Echo from server: %s", buf);
         printf("%s", buf);
     // Přijímání socketu a odeslání odpovědi o doručení
     }else{
@@ -120,7 +125,9 @@ int main(int argc, char **argv){
     return 0;
 }
 
-// Kontrola argumentů programu
+/*
+ * Funkce zkontroluje a rozparsuje argumenty
+ */
 bool parseArguments(int argc, char **argv){
     if(argc > 7){
         fprintf(stderr, "ERROR: Spatne zadane parametry. Nespravny pocet argumentu!\n");
@@ -133,11 +140,15 @@ bool parseArguments(int argc, char **argv){
                 host = optarg;
                 break;
             case 'p': portUsed = (int)atol(optarg);
-                if((port = atoi(optarg)) < 0){
-                    fprintf(stderr, "ERROR: Spatne zadane parametry. PORT musi byt kladne cislo\n");
+                //if ((port = atoi(optarg)) <= 0) {
+                if ((port = strtod(optarg, NULL)) <= 0) {
+                    fprintf(stderr, "ERROR: Spatne zadane parametry. PORT musi byt kladne cislo > 0 a < 65536\n");
                     exit(EXIT_FAILURE);
-                }
-                break;
+                }else if(port > 65535){
+                    fprintf(stderr, "ERROR: Spatne zadane parametry. PORT musi byt kladne cislo > 0 a < 65536\n");
+                    exit(EXIT_FAILURE);
+                }else
+                    break;
             case 'n':
                 nUsed = true;
                 nORlORf++;
