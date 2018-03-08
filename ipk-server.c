@@ -70,46 +70,51 @@ int main(int argc, char **argv) {
     // Server čeká v nekonečné smyčce na požadavky klienta
     while(1){
         int comm_socket = accept(welcome_socket, (struct sockaddr*)&sa_client, &sa_client_len);
-        if (comm_socket > 0)
-        {
-            if(inet_ntop(AF_INET6, &sa_client.sin6_addr, str, sizeof(str))) {
-                printf("INFO: New connection:\n");
-                printf("INFO: Client address is %s\n", str);
-                printf("INFO: Client port is %d\n", ntohs(sa_client.sin6_port));
-            }
 
-            char buff[BUFFER];
-            int res = 0;
-            for (;;)
-            {
-                memset(buff, 0, sizeof(buff));
-
-                // Přijetí požadavku klienta
-                res = recv(comm_socket, buff, BUFFER,0);
-                if (res <= 0)
-                    break;
-                printf("Received from client: %s\n", buff);
-
-                // Zpracování požadavku klienta
-                char *tmpRetezec = NULL;
-                tmpRetezec = parseData(buff, comm_socket);
-
-                // Odeslání socketu zpět klientovi
-                strcpy(buff, tmpRetezec);
-                if(lUsed == false) {
-                    send(comm_socket, buff, strlen(buff), 0);
-                    printf("Send to client: %s\n", buff);
-                }
-            }
+        int pid = fork();
+        if (pid < 0){
+            perror("fork() failed");
+            exit(EXIT_FAILURE);
         }
-        else
-        {
-            printf(".");
+        if (pid == 0) {
+            if (comm_socket > 0) {
+                if (inet_ntop(AF_INET6, &sa_client.sin6_addr, str, sizeof(str))) {
+                    printf("INFO: New connection:\n");
+                    printf("INFO: Client address is %s\n", str);
+                    printf("INFO: Client port is %d\n", ntohs(sa_client.sin6_port));
+                }
+
+                char buff[BUFFER];
+                int res = 0;
+                for (;;) {
+                    memset(buff, 0, sizeof(buff));
+
+                    // Přijetí požadavku klienta
+                    res = recv(comm_socket, buff, BUFFER, 0);
+                    if (res <= 0)
+                        break;
+                    printf("Received from client: %s\n", buff);
+
+                    // Zpracování požadavku klienta
+                    char *tmpRetezec = NULL;
+                    tmpRetezec = parseData(buff, comm_socket);
+
+                    // Odeslání socketu zpět klientovi
+                    strcpy(buff, tmpRetezec);
+                    if (lUsed == false) {
+                        send(comm_socket, buff, strlen(buff), 0);
+                        printf("Send to client: %s\n", buff);
+                    }
+                }
+            } else {
+                printf(".");
+            }
         }
         printf("Connection to %s closed\n",str);
         close(comm_socket);
     }
 }
+
 /*
  * Funkce pro zpracování dat na serveru
  */

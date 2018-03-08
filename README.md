@@ -1,4 +1,5 @@
 # VUT - FIT : IPK 2018
+### xkoval14@stud.fit.vutbr.cz
 
 Klient-server aplikace pro získání informace o uživatelích
 
@@ -18,10 +19,10 @@ Server běží na portu PORT. Pracuje se souborem /etc/passwd.
 Klient se připoje na server HOST na port PORT. 
 host (IP adresa nebo fully-qualified DNS name) identifikace serveru jakožto koncového bodu komunikace klienta;
 port (číslo) cílové číslo portu;
--n značí, že bude vráceno plné jméno uživatele včetně případných dalších informací pro uvedený login (User ID Info);
--f značí, že bude vrácena informace o domácím adresáři uživatele pro uvedený login (Home directory);
--l značí, že bude vrácen seznam všech uživatelů, tento bude vypsán tak, že každé uživatelské jméno bude na zvláštním řádku; v tomto případě je login nepovinný. Je-li však uveden bude použit jako prefix pro výběr uživatelů.
-login určuje přihlašovací jméno uživatele pro výše uvedené operace.
++ -n značí, že bude vráceno plné jméno uživatele včetně případných dalších informací pro uvedený login (User ID Info);
++ -f značí, že bude vrácena informace o domácím adresáři uživatele pro uvedený login (Home directory);
++ -l značí, že bude vrácen seznam všech uživatelů, tento bude vypsán tak, že každé uživatelské jméno bude na zvláštním řádku; v tomto případě je login nepovinný. Je-li však uveden bude použit jako prefix pro výběr uživatelů.
++ login určuje přihlašovací jméno uživatele pro výše uvedené operace.
 
 ```
 ./ipk-client -h HOST -p PORT [-n|-f|-l] LOGIN
