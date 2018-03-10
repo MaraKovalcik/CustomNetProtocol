@@ -115,7 +115,8 @@
 		\subsection{Implemetace klientské aplikace}
 			\begin{flushleft}
 				Pro spuštění klienta je nutné zadat správně argumenty, v opačném případě se klient nespustí.	Před začátkem komunikace musí být server již spuštěný. Komunikace vždy začíná klient odesláním welcome socketu na server.\\[0.5 cm] 
-				Jakmile je spojení navázáno, odešle klient zprávu, ve které první písmeno označuje požadovanou operaci a zbytek zprávy označuje hledaný login či prefix. V případě přepínače -l se loginy přijímají po jednom s tím, že klient vždy pošle zprávu zpět serveru o úspěšném přijetí aby server mohl pokračovat v posílání. Jakmile server odešle poslední login a příjde mu potvrzující zpráva, odešle zprávu end-communication , klient ji obdrží a komunikace se uzavře.\par		
+				Jakmile je spojení navázáno, odešle klient zprávu, ve které první písmeno označuje požadovanou operaci a zbytek zprávy označuje hledaný login či prefix. V případě přepínače -l se loginy přijímají po jednom s tím, že klient vždy pošle zprávu zpět serveru o úspěšném přijetí aby server mohl pokračovat v posílání. Jakmile server odešle poslední login a příjde mu potvrzující zpráva, odešle zprávu end-communication , klient ji obdrží a komunikace se uzavře.\\[0.5 cm] 
+				Pokouší-li se klient připojit na nějaký neočekávaný server, např. -h merlin.fit.vutbr.cz -p 80 (webový server) a nedostává žádnou odpověď, nebude čekat nekonečně dlouho, ale ukončí se po 5 vteřinách.\par		
 			\end{flushleft}
 			
 		\subsection{Implementace serverové aplikace}
@@ -136,7 +137,7 @@
 			\begin{adjustwidth}{1cm}{0cm}
 				\subsection{Zhodnocení}
 				\begin{flushleft}
-				Tento aplikační protokol je funkční, splňuje body v zadání a odchytává spoustu neočekávaných stavů a vypořádá se s nimi. Až na nějaké drobné problémy jsem se svým řešením spokojen.\par
+				Tento aplikační protokol je funkční, splňuje body v zadání a odchytává spoustu neočekávaných stavů a vypořádá se s nimi. Celkově jsem se svým řešením spokojen.\par
 				\end{flushleft}
 			\end{adjustwidth}						
 	\vfill

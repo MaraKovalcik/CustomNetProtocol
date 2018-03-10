@@ -86,6 +86,16 @@ int main(int argc, char **argv) {
 
                 char buff[BUFFER];
                 int res = 0;
+                // začátek spojení
+                res = recv(comm_socket, buff, BUFFER, 0);
+                if (res <= 0)
+                    break;
+                else if(strcmp(buff, "navazani_spojeni_client") == 0){
+                    memset(buff, 0, sizeof(buff));
+                    strcpy(buff, "navazani_spojeni_server");
+                    send(comm_socket, buff, strlen(buff), 0);
+                }
+
                 for (;;) {
                     memset(buff, 0, sizeof(buff));
 

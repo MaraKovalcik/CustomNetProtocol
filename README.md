@@ -4,6 +4,7 @@
 Navržení vlastního aplikačního protokolho realizující přenos informací o uživatelích na straně serveru.
 Klientská a serverová aplikace v C realizující zprostředkování informace o uživatelích na serveru.
 
+Tento soubor ukazuje jak projekt přeložit, jak uklidit binární soubory a jak spustit jednotlivé aplikace. Podrobnější popis projektu je v přiložené dokumentaci v PDF formátu.
 
 ### Překlad aplikací
 Překlad se provádí pomocí přiloženého souboru Makefile
@@ -41,10 +42,8 @@ port (číslo) cílové číslo portu;
 $ ./ipk-client -h HOST -p PORT [-n|-f|-l] LOGIN
 ```
 
-## Funkcionalita (a problémy)
+## Funkcionalita
 
-+ Na serveru **merlin.fit.vubtr.cz** funguje všechno jak má, včetně spuštění ipk-server na merlin.fit.vutbrcz a ipk-client na lokálním počítači
-+ ipk-server podporuje připojení více klientských aplikací najednou
-+ Problém: Na serveru **eva.fit.vubtr.cz** nefuguje připojení na server :(
-+ Problém: Není ošetřeno čekání na odpoveď neočekávaného serveru. např.: -h merlin.fit.vutbr.cz -p 80 (webový server)
++ Implementace byla testována na serverch merlin.fit.vutbr.cz a eva.fit.vutbr.cz a localhostu, všechny funkce jsou funkční a funguje odchytávání většiny chybových stavů
++ V případě něočekávaného serveru, např. -h merlin.fit.vutbr.cz -p 80 (webový sever), klient počká 5 sekund na odpověď a pokud nedostane, tak se ukončí s chybovým hlášením 
 

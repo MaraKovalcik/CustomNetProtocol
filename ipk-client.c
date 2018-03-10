@@ -73,7 +73,31 @@ int main(int argc, char **argv){
         exit(EXIT_FAILURE);
     }
 
+    // Kontrola odezvy serveru
+    strcpy(buf, "navazani_spojeni_client");
+    //printf("Send to server: %s\n",buf);
+    bytestx = send(client_socket, buf, strlen(buf), 0);
+    if (bytestx < 0)
+        perror("ERROR: sendto");
+
+    struct timeval tv;
+    tv.tv_sec = 5;
+    tv.tv_usec = 0;
+    setsockopt(client_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+
+    bytesrx = recv(client_socket, buf, BUFFER, 0);
+    if (bytesrx < 0){
+        perror("ERROR: recvfrom");
+        exit(EXIT_FAILURE);
+    }else if(strcmp(buf, "navazani_spojeni_server") != 0){
+        fprintf(stderr, "Chyba navazani spojeni s %s:%d\n", host, port);
+        exit(EXIT_FAILURE);
+    }
+
+
+
     // 5. Odeslání socketu
+    memset(buf, 0, BUFFER);
     strcat(buf, prepinac);
     strcat(buf, login);
     //printf("Send to server: %s\n",buf);
@@ -84,11 +108,7 @@ int main(int argc, char **argv){
     // přijímání socketu pro -n, -f
     if(lUsed == false) {
         // 6. Přijetí socketu
-        //while(pocetPokusu > 0) {
-            bytesrx = recv(client_socket, buf, BUFFER, 0);
-            //if ()
-            //pocetPokusu--;
-        //}
+        bytesrx = recv(client_socket, buf, BUFFER, 0);
         if (bytesrx < 0)
             perror("ERROR: recvfrom");
         printf("%s", buf);
