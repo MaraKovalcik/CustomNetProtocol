@@ -1,5 +1,4 @@
-# VUT - FIT : IPK 2018
-### Marek Kovalčík - xkoval14@stud.fit.vutbr.cz
+### Marek Kovalčík - mara.kovalcik@gmail.com
 
 Navržení vlastního aplikačního protokolho realizující přenos informací o uživatelích na straně serveru.
 Klientská a serverová aplikace v C realizující zprostředkování informace o uživatelích na serveru.
